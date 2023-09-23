@@ -1,0 +1,135 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ethical Hacking Project</title>
+    <style>
+        /* Add CSS styles here */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <form method="POST" action="/run_web_script">
+        <label for="urlInput">Enter URL for location lookup:</label>
+        <input type="text" name="website" placeholder="google.com">
+        <button type="submit">Get Location</button><br>
+    </form>
+
+    <form method="POST" action="/get_sec_headers">
+        <label for="urlInput">Enter URL for headers:</label>
+        <input type="text" name="headers" placeholder="google.com">
+        <button type="submit">Get Headers</button><br>
+    </form>
+
+    <form method="POST" action="/run_target_script">
+        <label for="targetInput">Enter IP for portscanning:</label>
+        <input type="text" name="target" placeholder="Enter IP">
+        <button type="submit">PortScan</button><br>
+    </form>
+
+    <form method="POST" action="/dns_sec_script">
+        <label for="targetInput">Enter domain for dns SEC validation:</label>
+        <input type="text" name="domain" placeholder="ex: google.com">
+        <button type="submit">DNS SEC validation</button><br>
+    </form>
+
+    <form method="POST" action="/whois_script">
+        <label for="targetInput">Enter domain for whois lookup:</label>
+        <input type="text" name="domain" placeholder="ex: google.com">
+        <button type="submit">whois lookup</button><br>
+    </form>
+
+    {% if dns_results %}
+    <h2>{{dns_results}}</h2>
+    {% endif %}
+
+    {% if headers_results %}
+    <h1>Results from header scan</h1>
+    <table>
+        <thead>                
+            <tr>
+                <th>Header</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key, value in headers_results.items() %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td>{{ value }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    {% if web_results %}
+    <h1>Result from url scan:</h1>
+        <h2>Port Scan Results:</h2>
+        <table>
+            <thead>                
+                <tr>
+                    {% for result in web_results %}
+                        <th>{{result}}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{web_results.ip}}</td>
+                    <td>{{web_results.hostname }}</td>
+                    <td>{{web_results.city}}</td>
+                    <td>{{web_results.region}}</td>
+                    <td>{{web_results.country}}</td>
+                    <td>{{web_results.loc}}</td>
+                    <td>{{web_results.org}}</td>
+                    <td>{{web_results.postal}}</td>
+                    <td>{{web_results.timezone}}</td>
+                    <td>{{web_results.readme}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- <div>raw:</div>
+        <div>{{web_results}}</div> -->
+    {% endif %}
+
+    {% if portscan_results %}
+    <h1>Result from IP scan:</h1>
+        <h2>IP Scan Results:</h2>
+        <pre>{{portscan_results}}</pre>
+    {% endif %}
+
+    {% if whois_results %}
+    <h1>Results from header scan</h1>
+    <table>
+        <thead>                
+            <tr>
+                <th>Header</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key, value in whois_results.items() %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td>{{ value }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</body>
+</html>
