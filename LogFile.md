@@ -1,4 +1,4 @@
-# Logboek Ethical hacking Python
+# Logfile Ethical hacking Python
 
 Starting of with exploring the libraries that were given to us as an interesting starting point, aswell as exploring the given demo scripts to see how certain libraries work.
 
@@ -11,3 +11,7 @@ For example, the user wants to find the ip address, location and other informati
 Changed Demo script 1 and 2 to a more OOP style so i could easily intergrate them in my project.
 
 Added DNS Sec validation script and a WhoIs script for domain lookup details. Currently some details in WhoIs lookup still inaccurate however.
+
+### Worked hours
+
+Around 5 Hours up to today (30/9/2023)
