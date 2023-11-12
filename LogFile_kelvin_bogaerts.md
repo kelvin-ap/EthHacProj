@@ -32,6 +32,23 @@ Will have to make time for checking and reviewing all previous code and styling.
 
 around 3 to 4 hours, for just the scappy file (NetworkScannerScapy.py). Should've done better, will have to make time before next deadline for cleaning up project part1 and 2 with adding next upcoming part 3.
 
+## Deadline 3
+
+### Scripts
+
+Continued the NetworkScannerScapy with a seperate HostDiscovery file which took a while, eventually got help from a colleague. Cleaned up code from previous functions. 
+
+Played around with Man In the Middle script but i still want to throw it's current working method around just for personal preference.
+
+Added a credential sniffer but haven't been able to validate it's functionality, just throws me an endless loop so far i can see. Going to be looking to refactor or even rewrite the previous code so i can have a clean template, it's currently quite messy.
+
+Not started with the wifi scanner script yet.
+
+### Worked hours
+
+Forgot to keep track but quite some hours. had a mistake in NetworkScannerScapy and took long to figure it out. I would say around 6 to 8 hours. 
+
+
 ## Questions answered - report
 
 1. **What is ethical/white-hat hacking?**
