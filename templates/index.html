@@ -52,12 +52,33 @@
         <button type="submit">whois lookup</button><br>
     </form>
 
+    <form method="POST" action="/scapy_script">
+        <label for="targetInput">Enter IP range for network scan:</label>
+        <input type="text" name="ipRange" placeholder="ex: 192.168.1.0/24">
+        <button type="submit">network scan - SCAPY</button><br>
+    </form>
+
+    <form method="POST" action="/arperMITM_script">
+        <label for="targetInput">Man in the Middle:</label>
+        <input type="text" name="victim" placeholder="victim IP">
+        <input type="text" name="gateway" placeholder="gateway IP">
+        <input type="text" name="interface" placeholder="interface ex: eth0">        
+        <button type="submit">ARP execute</button><br>
+    </form>
+
+    <form method="POST" action="/sniffForCredentials_script">
+        <label for="targetInput">Enter ports to sniff plaintext credentials on:</label>
+        <input type="text" name="port1" placeholder="ex: 80">
+        <input type="text" name="port2" placeholder="ex: 443">
+        <button type="submit">start sniff</button><br>
+    </form>
+
     {% if dns_results %}
     <h2>{{dns_results}}</h2>
     {% endif %}
 
-    {% if headers_results %}
-    <h1>Results from header scan</h1>
+    {% if results_json %}
+    <h1>Results</h1>
     <table>
         <thead>                
             <tr>
@@ -66,7 +87,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for key, value in headers_results.items() %}
+            {% for key, value in results_json.items() %}
                 <tr>
                     <td>{{ key }}</td>
                     <td>{{ value }}</td>
@@ -102,34 +123,12 @@
                 </tr>
             </tbody>
         </table>
-        <!-- <div>raw:</div>
-        <div>{{web_results}}</div> -->
     {% endif %}
 
     {% if portscan_results %}
     <h1>Result from IP scan:</h1>
         <h2>IP Scan Results:</h2>
         <pre>{{portscan_results}}</pre>
-    {% endif %}
-
-    {% if whois_results %}
-    <h1>Results from header scan</h1>
-    <table>
-        <thead>                
-            <tr>
-                <th>Header</th>
-                <th>Value</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for key, value in whois_results.items() %}
-                <tr>
-                    <td>{{ key }}</td>
-                    <td>{{ value }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
     {% endif %}
 </body>
 </html>
