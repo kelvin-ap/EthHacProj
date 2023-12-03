@@ -1,8 +1,13 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from scapy.layers.l2 import ARP, Ether
 from scapy.sendrecv import srp
+import nmap
 
-# This script was shared with Ernie de Magtige
+# arp_host_discovery credit to Ernie de Magtige
+class Host:
+    def __init__(self, ip, mac):
+        self.ip = ip
+        self.mac = mac
 
 def scan_ip(current_ip):
     arp_request = ARP(pdst=current_ip)
@@ -13,11 +18,11 @@ def scan_ip(current_ip):
     hosts = []
     for _, received in answered_list:
         print(f"IP: {received.psrc}", flush=True)
-        hosts.append({'ip': received.psrc, 'mac': received.hwsrc})
+        hosts.append(Host(received.psrc, received.hwsrc))
 
     return hosts
 
-def scan_network(subnet):
+def arp_host_discovery(subnet):
     network, host_part = subnet.split('/')
     host_part = int(host_part)
     num_addresses = 2 ** (32 - host_part)
@@ -48,4 +53,15 @@ def scan_network(subnet):
         for future in as_completed(futures):
             hosts.extend(future.result())
 
+    return hosts
+
+
+def nmap_host_discovery(subnet):
+    nm = nmap.PortScanner()
+    nm.scan(hosts=subnet, arguments='-sn')
+
+    hosts = []
+    for host in nm.all_hosts():
+        hosts.append(Host(host, None))
+        
     return hosts

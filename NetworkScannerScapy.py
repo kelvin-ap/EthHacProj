@@ -1,9 +1,8 @@
 from scapy.all import srp, Ether, ARP, IP, TCP, sniff, sr1
 from scapy.all import *
 from scapy.layers.inet import IP, ICMP
-import  json, nmap, argparse
-import HostDiscoVE
-import nmap
+import  json, argparse
+import HostDiscoV2
 
 class NetworkScanner:
     def __init__(self):
@@ -11,10 +10,21 @@ class NetworkScanner:
 
     # ip_range format = 192.168.0.0/24
     def host_discovery(self, ip_range):
-        # Use HostDiscoVE module to scan the network for hosts
-        discovered_hosts = HostDiscoVE.scan_network(ip_range)
-        print("Host discovery done")
-        self.results['Hosts'] = discovered_hosts
+        # Use HostDiscoV2 module to scan the network for hosts
+        discovered_hosts = HostDiscoV2.arp_host_discovery(ip_range)
+        if not discovered_hosts:
+            print("No hosts detected with ARP scan. Performing Nmap scan.")
+            discovered_hosts = HostDiscoV2.nmap_host_discovery(ip_range)
+            list = []
+            for host in discovered_hosts:
+                list.append(host.ip)
+            self.results['nmap'] = list
+            return discovered_hosts
+            
+        print("ARP Host discovery done")
+        for host in discovered_hosts:
+            self.results['ARP ip'] = host.ip
+            self.results['ARP mac'] = host.mac
         return discovered_hosts
 
     def service_discovery(self, hosts):
@@ -111,11 +121,11 @@ class NetworkScanner:
 
     def run(self, ip_range):
         full_hosts = self.host_discovery(ip_range)
-        hosts = [host['ip'] for host in full_hosts]
+        hosts = [host.ip for host in full_hosts]
         print(hosts)
-        self.service_discovery(full_hosts)
-        self.remote_os_detection(full_hosts)  # Corrected the argument
-        self.pcap_analysis(full_hosts)
+        # self.service_discovery(full_hosts)
+        # self.remote_os_detection(full_hosts)  # Corrected the argument
+        # self.pcap_analysis(full_hosts)
         print("Run done")
 
         # Save the results in a JSON file
@@ -132,8 +142,8 @@ if __name__ == "__main__":
     if args.ip_range:
         scanner = NetworkScanner()
         results = scanner.run(args.ip_range)
-        with open('results.json', 'w') as f:
-            json.dump(results, f, indent=4)
-        print("Scan complete. Results saved in 'results.json'.")
+        # with open('results.json', 'w') as f:
+        #     json.dump(results, f, indent=4)
+        # print("Scan complete. Results saved in 'results.json'.")
     else:
         print("Please provide an IP range. Use --ip_range <ip_range>.")

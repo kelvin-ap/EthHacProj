@@ -2,3 +2,5 @@
 demo
 environments
 ./environments
+results.json
+scapy_script.json

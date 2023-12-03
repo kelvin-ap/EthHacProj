@@ -36,7 +36,7 @@ around 3 to 4 hours, for just the scappy file (NetworkScannerScapy.py). Should'v
 
 ### Scripts
 
-Continued the NetworkScannerScapy with a seperate HostDiscovery file which took a while, eventually got help from a colleague. Cleaned up code from previous functions. 
+Continued the NetworkScannerScapy with a seperate HostDiscovery file which took a while, eventually got help from a colleague. Cleaned up code from previous functions.
 
 Played around with Man In the Middle script but i still want to throw it's current working method around just for personal preference.
 
@@ -46,8 +46,18 @@ Not started with the wifi scanner script yet.
 
 ### Worked hours
 
-Forgot to keep track but quite some hours. had a mistake in NetworkScannerScapy and took long to figure it out. I would say around 6 to 8 hours. 
+Forgot to keep track but quite some hours. had a mistake in NetworkScannerScapy and took long to figure it out. I would say around 6 to 8 hours.
 
+## Deadline 4
+
+### Scripts
+
+Changed all current output to json output so that it fits nicely in the browser output, and thus i clean up the html template.
+
+
+### Worked hours
+
+..
 
 ## Questions answered - report
 

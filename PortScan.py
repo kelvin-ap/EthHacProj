@@ -1,31 +1,25 @@
-import sys
+import json
 import nmap
-import rich
 from rich.table import Table
 from rich import print
 
-def scan_ports(targetL):
-    ports = [21, 22, 80, 139, 443, 8080]
+def scan_ports(targetL):    
+    ports = [20, 21, 22, 23, 25, 69,80, 139, 443, 445, 623, 3306,3389, 5900, 8080, 27020]
     scan_v = nmap.PortScanner()
     target = str(targetL)
-    results = ""
+    results = {}
+    cli_output = ""
     
     for port in ports:
         portscan = scan_v.scan(target, str(port))
         regel = f"Poort {port} is " + portscan["scan"][list(portscan["scan"])[0]]["tcp"][port]["state"] +"\n"
-        results += regel
+        cli_output += regel
+        results[str(port)] = str(portscan["scan"][list(portscan["scan"])[0]]["tcp"][port]["state"])
     
     regel = f"Host {target} is " + portscan["scan"][list(portscan["scan"])[0]]["status"]["state"]
-    results += regel
-    print(results)
+    cli_output += regel
+    print(cli_output)
+
+    results["host"] = str(portscan["scan"][list(portscan["scan"])[0]]["status"]["state"])
+
     return results
-
-# if __name__ == "__main__":
-#     if len(sys.argv) != 2:
-#         print("Usage: python script.py <target>")
-#         sys.exit(1)
-
-#     scan_ports(sys.argv[1])
-    
-#     target = sys.argv[1]
-#     scan_results = scan_ports(target)

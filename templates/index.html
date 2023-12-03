@@ -34,7 +34,7 @@
         <button type="submit">Get Headers</button><br>
     </form>
 
-    <form method="POST" action="/run_target_script">
+    <form method="POST" action="/portscan">
         <label for="targetInput">Enter IP for portscanning:</label>
         <input type="text" name="target" placeholder="Enter IP">
         <button type="submit">PortScan</button><br>
@@ -73,10 +73,6 @@
         <button type="submit">start sniff</button><br>
     </form>
 
-    {% if dns_results %}
-    <h2>{{dns_results}}</h2>
-    {% endif %}
-
     {% if results_json %}
     <h1>Results</h1>
     <table>
@@ -96,39 +92,6 @@
         </tbody>
     </table>
     {% endif %}
-
-    {% if web_results %}
-    <h1>Result from url scan:</h1>
-        <h2>Port Scan Results:</h2>
-        <table>
-            <thead>                
-                <tr>
-                    {% for result in web_results %}
-                        <th>{{result}}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{web_results.ip}}</td>
-                    <td>{{web_results.hostname }}</td>
-                    <td>{{web_results.city}}</td>
-                    <td>{{web_results.region}}</td>
-                    <td>{{web_results.country}}</td>
-                    <td>{{web_results.loc}}</td>
-                    <td>{{web_results.org}}</td>
-                    <td>{{web_results.postal}}</td>
-                    <td>{{web_results.timezone}}</td>
-                    <td>{{web_results.readme}}</td>
-                </tr>
-            </tbody>
-        </table>
-    {% endif %}
-
-    {% if portscan_results %}
-    <h1>Result from IP scan:</h1>
-        <h2>IP Scan Results:</h2>
-        <pre>{{portscan_results}}</pre>
-    {% endif %}
+    
 </body>
 </html>
