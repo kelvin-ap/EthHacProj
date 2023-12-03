@@ -52,12 +52,17 @@ Forgot to keep track but quite some hours. had a mistake in NetworkScannerScapy 
 
 ### Scripts
 
-Changed all current output to json output so that it fits nicely in the browser output, and thus i clean up the html template.
+Changed all current output to json output so that it fits nicely in the browser output, and thus I can clean up the html template.
 
+Put in an alternative to ARP host discovery, ARP seemed unreliable.
+
+Retried os detection with nmap, this time successful and reliable output.
+
+Not gotten around to implementing the keylogger website of les 9 yet. Tried implementing a path finder for domains but seems to be complicated and I've put it off for now.
 
 ### Worked hours
 
-..
+So far 8h for all, cleaned up some code here and there.
 
 ## Questions answered - report
 

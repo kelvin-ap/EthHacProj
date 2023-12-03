@@ -3,6 +3,10 @@ from scapy.all import *
 from scapy.layers.inet import IP, ICMP
 import  json, argparse
 import HostDiscoV2
+from os_detection import OsDetector
+import concurrent.futures
+from rich.table import Table
+from rich import print
 
 class NetworkScanner:
     def __init__(self):
@@ -19,12 +23,15 @@ class NetworkScanner:
             for host in discovered_hosts:
                 list.append(host.ip)
             self.results['nmap'] = list
+            print("Host discovery done")
             return discovered_hosts
             
         print("ARP Host discovery done")
         for host in discovered_hosts:
             self.results['ARP ip'] = host.ip
             self.results['ARP mac'] = host.mac
+
+        print("Host discovery done")
         return discovered_hosts
 
     def service_discovery(self, hosts):
@@ -51,54 +58,38 @@ class NetworkScanner:
         print("Service discovery done")
         return open_ports
 
-    # Unreliable
+    @staticmethod
+    def _detect_os(host):
+        os_detector = OsDetector(host)
+        detected_os = os_detector.find_os()
+        return host, detected_os
+
     def remote_os_detection(self, hosts):
         os_info = {}
 
-        for host in hosts:
-            os_info[host['ip']] = []  # Corrected the dictionary key
-            pack = IP(dst=host['ip'])/ICMP()
-            resp = sr1(pack, timeout=3)
-            if resp:
-                if IP in resp:
-                    ttl = resp.getlayer(IP).ttl
-                    if ttl <= 64:
-                        os = 'Linux/Unix'
-                    elif ttl > 64:
-                        os = 'Windows'
-                    else:
-                        os = 'Not Found'
-                    os_info[host['ip']].append(os)
-                print(f'\n\nTTL = {ttl} \n*{os}* Operating System is Detected \n\n')
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            # Submit tasks for each host in parallel
+            futures = {executor.submit(self._detect_os, host): host for host in hosts}
+
+            # Retrieve results as they become available
+            for future in concurrent.futures.as_completed(futures):
+                host = futures[future]
+                try:
+                    detected_os = future.result()[1]
+                    os_info[str(host)] = detected_os
+                except Exception as e:
+                    os_info[str(host)] = f"Error: {e}"
+
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("Header", style="bold red")
+        table.add_column("Value", style="bold green")
+        for key, value in os_info.items():
+            table.add_row(key, value)
+        print(table)
+
         self.results['os_info'] = os_info
         print("Remote OS detection done")
         return os_info
-    
-    
-    # # Alternative method to detect OS with Nmap, doesn't work tho
-    # def remote_os_detection(self, hosts):
-    #     os_info = {}
-
-    #     for host in hosts:
-    #         os_info[host] = []
-    #         detected_os = self.detect_os(host)
-    #         os_info[host].append(detected_os)
-    #         print(f'\n\n*{detected_os}* Operating System is Detected for {host}\n\n')
-
-    #     self.results['os_info'] = os_info
-    #     print("remote_os_detection done")
-    #     return os_info
-
-    # def detect_os(self, host):
-    #     nm = nmap.PortScanner()
-    #     nm.scan(hosts=host, arguments='-O')
-
-    #     if 'osclass' in nm[host]:
-    #         # Extract the detected OS information
-    #         os_info = nm[host]['osclass'][0]['osfamily']
-    #         return os_info
-    #     else:
-    #         return 'Not Found'
 
     def pcap_analysis(self, hosts):
         http_traffic = {}
@@ -122,9 +113,9 @@ class NetworkScanner:
     def run(self, ip_range):
         full_hosts = self.host_discovery(ip_range)
         hosts = [host.ip for host in full_hosts]
-        print(hosts)
+
         # self.service_discovery(full_hosts)
-        # self.remote_os_detection(full_hosts)  # Corrected the argument
+        self.remote_os_detection(hosts)
         # self.pcap_analysis(full_hosts)
         print("Run done")
 
@@ -142,8 +133,5 @@ if __name__ == "__main__":
     if args.ip_range:
         scanner = NetworkScanner()
         results = scanner.run(args.ip_range)
-        # with open('results.json', 'w') as f:
-        #     json.dump(results, f, indent=4)
-        # print("Scan complete. Results saved in 'results.json'.")
     else:
         print("Please provide an IP range. Use --ip_range <ip_range>.")

@@ -63,5 +63,6 @@ def nmap_host_discovery(subnet):
     hosts = []
     for host in nm.all_hosts():
         hosts.append(Host(host, None))
+        print(host)
         
     return hosts
