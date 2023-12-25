@@ -1,11 +1,7 @@
 import subprocess
 from flask import Flask, render_template, request, jsonify
-import responseInfo
-import PortScan
-import DnsResolver
-import WhoIs
-import sniffer
-from NetworkScannerScapy import NetworkScanner
+
+import scripts
 
 app = Flask(__name__)
 
@@ -17,46 +13,50 @@ def index():
 @app.route('/run_web_script', methods=['POST'])
 def run_web_script():
     user_input = request.form.get('website')
-    results = responseInfo.get_location_info(user_input)
+    results = scripts.ResponseInfo(user_input).get_location_info()
     return render_template('index.html', results_json=results)
 
 @app.route('/get_sec_headers', methods=['POST'])
 def get_sec_headers():
     target = request.form.get('headers')
-    results_json = responseInfo.get_headers(target)
+    results_json = scripts.ResponseInfo(target).get_headers()
     return render_template('index.html', results_json=results_json)
 
 @app.route('/portscan', methods=['POST'])
 def run_target_script():
     target = request.form.get('target')
-    results = PortScan.scan_ports(target)
+    results = scripts.PortScanner(target).scan_ports()
     return render_template('index.html', results_json=results)
 
 @app.route('/dns_sec_script', methods=['POST'])
 def dns_sec_script():
     domain = request.form.get('domain')
-    results = DnsResolver.resolve_ip(domain)
+    results = scripts.DnsResolver(domain).resolve_ip()
     return render_template('index.html', results_json=results)
 
 @app.route('/whois_script', methods=['POST'])
 def whois_script():
     domain = request.form.get('domain')
-    results_json = WhoIs.get_domain_info(domain)
+    results_json = scripts.WhoIs(domain).get_domain_info()
     return render_template('index.html', results_json=results_json)
 
 @app.route('/scapy_script', methods=['POST'])
 def scapy_script():
     IPRange = request.form.get('ipRange')
-    Scan = NetworkScanner()
+    Scan = scripts.NetworkScanner()
     results_json = Scan.run(IPRange)
     return render_template('index.html', results_json=results_json)
 
-@app.route('/arperMITM_script', methods=['POST']) #upon button press run this
+# CHECK IF THIS STILL WORKS
+@app.route('/arperMITM_script', methods=['POST'])
 def arper_run():
     # 3 input fields
     victim = request.form.get('victim')
     gateway = request.form.get('gateway')
     interface = request.form.get('interface')
+    attack = scripts.Arper(victim, gateway, interface)
+    results_json = attack.run()
+    return render_template('index.html', results_json=results_json)
 
     # Command to run the Arper script with the provided arguments
     command = [
@@ -95,17 +95,30 @@ def arper_run():
     except Exception as e:
         # Handle any exceptions that may occur during subprocess execution
         return jsonify({'error': str(e)})
-    
+
+ # CHECK IF THIS STILL WORKS   
 @app.route('/sniffForCredentials_script', methods=['POST'])
 def sniff():
     port1 = request.form.get('port1')
     port2 = request.form.get('port2')
-    results = sniffer.sniff_for_credentials(port1, port2)
+    results = scripts.Sniffer(port1, port2).sniff_for_credentials()
 
     results_dict = {
         'results': results
     }
     return render_template('index.html', results_json=results_dict)
+
+@app.route('/bruteforce_script', methods=['POST'])
+def bruteforce():
+    url = request.form.get('url')
+    print(f"url = {url}")
+    username = request.form.get('username')
+    password_file = request.form.get('passwordfile')
+    login_failed_string = request.form.get('login_failed_string')
+    cookie_value = request.form.get('cookie_value')
+
+    results_json = scripts.Bruteforce(url, username, password_file, login_failed_string, cookie_value).cracking()
+    return render_template('index.html', results_json=results_json)
 
 if __name__ == '__main__':
     app.run(debug=True)

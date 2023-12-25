@@ -54,7 +54,7 @@
 
     <form method="POST" action="/scapy_script">
         <label for="targetInput">Enter IP range for network scan:</label>
-        <input type="text" name="ipRange" placeholder="ex: 192.168.1.0/24">
+        <input type="text" name="ipRange" placeholder="ex: 192.168.0.0/24">
         <button type="submit">network scan - SCAPY</button><br>
     </form>
 
@@ -71,6 +71,16 @@
         <input type="text" name="port1" placeholder="ex: 80">
         <input type="text" name="port2" placeholder="ex: 443">
         <button type="submit">start sniff</button><br>
+    </form>
+
+    <form method="POST" action="/bruteforce_script">
+        <label for="targetInput">Enter url for brute force:</label>
+        <input type="text" name="url" placeholder="ex: http://127.0.0.1:5000" value="">
+        <input type="text" name="username" placeholder="ex: admin" value="">
+        <input type="text" name="passwordfile" placeholder="ex: ./extra/10K_passwords.txt" value="">
+        <input type="text" name="login_failed_string" placeholder="ex: Wrong password! Please try again." value="">
+        <input type="text" name="cookie_value" placeholder="optional -> leave empty" value="">
+        <button type="submit">start brute force</button><br>
     </form>
 
     {% if results_json %}

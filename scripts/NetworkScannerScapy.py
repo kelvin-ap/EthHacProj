@@ -2,23 +2,63 @@ from scapy.all import srp, Ether, ARP, IP, TCP, sniff, sr1
 from scapy.all import *
 from scapy.layers.inet import IP, ICMP
 import  json, argparse
-import HostDiscoV2
-from os_detection import OsDetector
 import concurrent.futures
 from rich.table import Table
 from rich import print
 
+from .os_detection import OsDetector
+from .HostDiscoV2 import HostDiscovery
+
 class NetworkScanner:
+    """
+    This class provides methods for host discovery, service discovery, remote OS detection,
+    and pcap analysis on a network using Scapy and Nmap.
+
+    Attributes:
+    - results: A dictionary to store the results of the network scan.
+
+    Methods:
+    1. __init__(self):
+        - Initializes the instance with an empty results dictionary.
+
+    2. host_discovery(self, ip_range):
+        - Performs host discovery on the specified IP range using ARP or Nmap.
+        - Returns a list of discovered hosts.
+
+    3. service_discovery(self, hosts):
+        - Performs service discovery by checking for open ports on each host.
+        - Returns a dictionary mapping IP addresses to open ports.
+
+    4. _detect_os(self, host):
+        - Helper method to detect the operating system of a remote host.
+        - Uses the OsDetector class from os_detection module.
+        - Returns a tuple containing the host and the detected OS.
+
+    5. remote_os_detection(self, hosts):
+        - Performs remote OS detection for a list of hosts using multithreading.
+        - Prints a formatted table of host and OS information.
+        - Returns a dictionary mapping host IPs to detected OS.
+
+    6. pcap_analysis(self, hosts):
+        - Performs pcap analysis to capture HTTP traffic on the network.
+        - Returns a dictionary mapping host IPs to captured HTTP traffic.
+
+    7. run(self, ip_range):
+        - Executes the complete network scan including host discovery, service discovery,
+          remote OS detection, and pcap analysis.
+        - Saves the results in a JSON file.
+        - Returns the results dictionary.
+    """
+
     def __init__(self):
         self.results = {}
 
     # ip_range format = 192.168.0.0/24
     def host_discovery(self, ip_range):
-        # Use HostDiscoV2 module to scan the network for hosts
-        discovered_hosts = HostDiscoV2.arp_host_discovery(ip_range)
+        discovered_hosts = HostDiscovery(ip_range).arp_host_discovery()
         if not discovered_hosts:
             print("No hosts detected with ARP scan. Performing Nmap scan.")
-            discovered_hosts = HostDiscoV2.nmap_host_discovery(ip_range)
+            discovered_hosts = HostDiscovery(ip_range).nmap_host_discovery()
             list = []
             for host in discovered_hosts:
                 list.append(host.ip)
