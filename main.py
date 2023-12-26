@@ -135,5 +135,33 @@ def bruteforce():
     
     return render_template('index.html', results_json=results_json)
 
+@app.route('/ssh_bruteforce_script', methods=['POST'])
+def ssh_bruteforce():
+    host = request.form.get('host') or None
+    username = request.form.get('username') or None
+    threads = request.form.get('threads') or None
+    port = request.form.get('port') or None
+    password_file = request.form.get('passwordfile') or None
+
+    if not host and not username and not threads and not port and not password_file:
+        results_json = scripts.SSHBruteForce().run()
+    else:
+        params = {}
+        if host:
+            params['url'] = host
+        if username:
+            params['username'] = username
+        if threads:
+            params['threads'] = password_file
+        if port:
+            params['port'] = port
+        if password_file:
+            params['password_file'] = password_file
+
+        results_json = scripts.SSHBruteForce(**params).run()
+    
+    return render_template('index.html', results_json=results_json)
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)

@@ -8,3 +8,4 @@ from .PortScan import PortScanner
 from .responseInfo import ResponseInfo
 from .sniffer import Sniffer
 from .WhoIs import WhoIs
+from .sshBruteforce import SSHBruteForce

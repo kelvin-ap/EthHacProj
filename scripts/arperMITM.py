@@ -138,7 +138,7 @@ class Arper():
     
     def write_output_to_file(self, result_json):
         current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        file_name = f"arper_results{current_time}.json"
+        file_name = f"./results/arper_results{current_time}.json"
         with open(file_name, "w") as file:
             json.dump(result_json, file, indent=4)
         print(f"Output written to file: {file_name}")

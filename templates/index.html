@@ -40,7 +40,7 @@
 <body>
     <script>
         function showForm(formId) {
-            const formIds = ['locationForm', 'headersForm', 'portScanForm', 'dnsSecForm', 'whoisForm', 'networkScanForm', 'arpForm', 'sniffForm', 'bruteForceForm'];
+            const formIds = ['locationForm', 'headersForm', 'portScanForm', 'dnsSecForm', 'whoisForm', 'networkScanForm', 'arpForm', 'sniffForm', 'bruteForceForm', 'ssh_bruteForce_Form'];
 
             // Hide all forms
             formIds.forEach(id => {
@@ -67,6 +67,7 @@
         <button onclick="showForm('arpForm')">ARP Execute</button>
         <button onclick="showForm('sniffForm')">Start Sniff</button>
         <button onclick="showForm('bruteForceForm')">Start Brute Force</button>
+        <button onclick="showForm('ssh_bruteForce_Form')">SSH Brute Force</button>
     </div>
 
     
@@ -87,6 +88,7 @@
         <input type="text" name="target" placeholder="Enter IP">
         <button type="submit">PortScan</button><br>
     </form>
+
     <form id="dnsSecForm" method="POST" action="/dns_sec_script">
         <label for="targetInput">Enter domain for dns SEC validation:</label>
         <input type="text" name="domain" placeholder="ex: google.com">
@@ -122,12 +124,23 @@
     
     <form id="bruteForceForm" method="POST" action="/bruteforce_script">
         <label for="targetInput">Enter url for brute force:</label>
-        <input type="text" name="url" placeholder="ex: http://127.0.0.1:5000" value="">
-        <input type="text" name="username" placeholder="ex: admin" value="">
-        <input type="text" name="passwordfile" placeholder="ex: ./extra/10K_passwords.txt" value="">
-        <input type="text" name="login_failed_string" placeholder="ex: Wrong password! Please try again." value="">
+        <input type="text" name="url" placeholder="empty = http://127.0.0.1:5005" value="">
+        <input type="text" name="username" placeholder="empty = admin" value="">
+        <input type="text" name="passwordfile" placeholder="empty = ./extra/10K_passwords.txt" value="">
+        <input type="text" name="login_failed_string" placeholder="empty = Wrong password! Please try again." value="">
         <input type="text" name="cookie_value" placeholder="optional -> leave empty" value="">
         <button type="submit">start brute force</button><br>
+    </form>
+    
+    <form id="ssh_bruteForce_Form" method="POST" action="/ssh_bruteforce_script">
+        <p>This execution will cause a lot of cluttering in CLI - still works though</p>
+        <label for="targetInput">Enter host ip for ssh brute force:</label>
+        <input type="text" name="host" placeholder="empty = http://192.168.146.65" value="">
+        <input type="text" name="username" placeholder="empty = root" value="">
+        <input type="number" name="threads" placeholder="empty = 5" value="">
+        <input type="number" name="port" placeholder="empty = 22" value="">
+        <input type="text" name="passwordfile" placeholder="empty = ./extra/10K_passwords.txt" value="">
+        <button type="submit">start SSH brute force</button><br>
     </form>
     
 

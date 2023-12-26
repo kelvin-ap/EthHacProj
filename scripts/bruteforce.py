@@ -67,7 +67,7 @@ class Bruteforce():
 	
 	def write_credentials_to_file(self, credentials):
 		current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-		filename = f"bruteforce_results_{current_time}.txt"
+		filename = f"./results/bruteforce_results_{current_time}.txt"
 		with open(filename, 'a') as file:
 			file.write(f"Site: {self.url}\n")
 			file.write(f"Username: {credentials['username']}\n")
