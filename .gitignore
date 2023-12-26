@@ -4,3 +4,6 @@ environments
 ./environments
 results.json
 scapy_script.json
+*.txt
+*.json
+.git

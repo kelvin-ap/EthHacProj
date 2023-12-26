@@ -1,4 +1,5 @@
 import datetime
+import json
 import whois
 from rich.table import Table
 from rich import print
@@ -68,11 +69,18 @@ class WhoIs:
                     value = value.strftime("%Y-%m-%d")
                 table.add_row(key, value)
             print(table)
-
+            self.write_output_to_file(html_display_info)
             return html_display_info
 
         except whois.parser.PywhoisError as e:
             print(f"Error: {e}")
+
+    def write_output_to_file(self, result_json):
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        file_name = f"whois_results{current_time}.json"
+        with open(file_name, "w") as file:
+            json.dump(result_json, file, indent=4)
+        print(f"Output written to file: {file_name}")
 
 if __name__ == "__main__":
     domain_name = input("Enter a domain name to retrieve WHOIS information: ")

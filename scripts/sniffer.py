@@ -1,3 +1,5 @@
+import datetime
+import json
 from scapy.all import sniff, TCP, IP
 
 class Sniffer:
@@ -43,7 +45,7 @@ class Sniffer:
     def sniff_for_credentials(self):
         sniff(filter=f'tcp port {self.port1} or tcp port {self.port2}',
               prn=self.packet_callback, store=0)
-
+        self.write_output_to_file(self.results)
         return self.results
 
 # def sniff_for_credentials(port1, port2):
@@ -66,6 +68,13 @@ class Sniffer:
 #           prn=packet_callback, store=0)
 
 #     return results
+    
+    def write_output_to_file(self, result_json):
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        file_name = f"snifferCredentials_results{current_time}.json"
+        with open(file_name, "w") as file:
+            json.dump(result_json, file, indent=4)
+        print(f"Output written to file: {file_name}")
 
 if __name__ == "__main__":
         sniffer = Sniffer(port1=80, port2=443)

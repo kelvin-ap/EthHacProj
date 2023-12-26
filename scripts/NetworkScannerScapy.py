@@ -1,10 +1,10 @@
 from scapy.all import srp, Ether, ARP, IP, TCP, sniff, sr1
 from scapy.all import *
 from scapy.layers.inet import IP, ICMP
-import  json, argparse
-import concurrent.futures
 from rich.table import Table
 from rich import print
+import json, argparse
+import concurrent.futures
 
 from .os_detection import OsDetector
 from .HostDiscoV2 import HostDiscovery
@@ -159,11 +159,15 @@ class NetworkScanner:
         # self.pcap_analysis(full_hosts)
         print("Run done")
 
-        # Save the results in a JSON file
-        with open('scapy_script.json', 'w') as f:
-            json.dump(self.results, f, indent=4)
-        print("Scan complete. Results saved in 'scapy_script.json'")
+        self.write_output_to_file(self.results)
         return self.results
+    
+    def write_output_to_file(self, result_json):
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        file_name = f"networkScan_results{current_time}.json"
+        with open(file_name, "w") as file:
+            json.dump(result_json, file, indent=4)
+        print(f"Output written to file: {file_name}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Network Scanner')

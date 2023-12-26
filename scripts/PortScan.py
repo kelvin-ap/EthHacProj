@@ -1,3 +1,5 @@
+import datetime
+import json
 import nmap
 from rich.table import Table
 from rich import print
@@ -56,6 +58,13 @@ class PortScanner:
 
         print(self.cli_output)
         return self.results
+    
+    def write_output_to_file(self, result_json):
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        file_name = f"portScan_results{current_time}.json"
+        with open(file_name, "w") as file:
+            json.dump(result_json, file, indent=4)
+        print(f"Output written to file: {file_name}")
 
 if __name__ == "__main__":
     targetL = "127.0.0.1"  # Replace with your target IP address

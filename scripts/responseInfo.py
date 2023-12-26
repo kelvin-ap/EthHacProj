@@ -1,3 +1,4 @@
+import datetime
 from rich.table import Table
 from rich import print
 import requests
@@ -43,7 +44,7 @@ class ResponseInfo:
             for key, value in response.items():
                 table.add_row(key, value)
             print(table)
-
+            self.write_output_to_file("location", response)
             return response
         except Exception as e:
             return {"error": str(e)}
@@ -59,10 +60,18 @@ class ResponseInfo:
             for key, value in request.headers.items():
                 table.add_row(key, value)
             print(table)
+            self.write_output_to_file("headers", request.headers)
             return request.headers
 
         except Exception as e:
             return {"error": str(e)}
+        
+    def write_output_to_file(self, name, result_json):
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        file_name = f"{name}_results{current_time}.json"
+        with open(file_name, "w") as file:
+            json.dump(result_json, file, indent=4)
+        print(f"Output written to file: {file_name}")
 
 # Usage example:
 if __name__ == "__main__":

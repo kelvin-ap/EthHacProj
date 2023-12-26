@@ -1,3 +1,5 @@
+import datetime
+import json
 from multiprocessing import Process
 from scapy.all import (ARP, Ether, conf, get_if_hwaddr,
                        send, sniff, sndrcv, srp, wrpcap)
@@ -133,6 +135,13 @@ class Arper():
         for _, r in resp:
             return r[Ether].src
         return None
+    
+    def write_output_to_file(self, result_json):
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        file_name = f"arper_results{current_time}.json"
+        with open(file_name, "w") as file:
+            json.dump(result_json, file, indent=4)
+        print(f"Output written to file: {file_name}")
 
 
 if __name__ == '__main__':
