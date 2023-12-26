@@ -1,7 +1,9 @@
-<!-- templates/index.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ethical Hacking Project</title>
     <style>
         /* Add CSS styles here */
@@ -19,61 +21,115 @@
         th {
             background-color: #f2f2f2;
         }
+
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+        }
+
+        .navbar button {
+            padding: 8px;
+        }
+
+        form {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <form method="POST" action="/run_web_script">
+    <script>
+        // function showForm(formId) {
+        //     const formIds = ['locationForm', 'headersForm', 'portScanForm', 'dnsSecForm', 'whoisForm', 'networkScanForm', 'arpForm', 'sniffForm', 'bruteForceForm'];
+
+        //     formIds.forEach(form => {
+        //         form = false;
+        //     });
+
+        //     formId = true;
+        // }
+        function showForm(formId) {
+            const formIds = ['locationForm', 'headersForm', 'portScanForm', 'dnsSecForm', 'whoisForm', 'networkScanForm', 'arpForm', 'sniffForm', 'bruteForceForm'];
+
+            // Hide all forms
+            formIds.forEach(id => {
+                const form = document.getElementById(id);
+                if (form) {
+                    form.style.display = 'none';
+                }
+            });
+
+            // Show the selected form
+            const selectedForm = document.getElementById(formId);
+            if (selectedForm) {
+                selectedForm.style.display = 'block';
+            }
+        }
+    </script>
+    <div class="navbar">
+        <button onclick="showForm('locationForm')">Get Location</button>
+        <button onclick="showForm('headersForm')">Get Headers</button>
+        <button onclick="showForm('portScanForm')">PortScan</button>
+        <button onclick="showForm('dnsSecForm')">DNS SEC validation</button>
+        <button onclick="showForm('whoisForm')">Whois Lookup</button>
+        <button onclick="showForm('networkScanForm')">Network Scan</button>
+        <button onclick="showForm('arpForm')">ARP Execute</button>
+        <button onclick="showForm('sniffForm')">Start Sniff</button>
+        <button onclick="showForm('bruteForceForm')">Start Brute Force</button>
+    </div>
+
+    
+    <form id="locationForm" method="POST" action="/run_web_script">
         <label for="urlInput">Enter URL for location lookup:</label>
         <input type="text" name="website" placeholder="google.com">
         <button type="submit">Get Location</button><br>
     </form>
-
-    <form method="POST" action="/get_sec_headers">
+    
+    <form id="headersForm" method="POST" action="/get_sec_headers">
         <label for="urlInput">Enter URL for headers:</label>
         <input type="text" name="headers" placeholder="google.com">
         <button type="submit">Get Headers</button><br>
     </form>
 
-    <form method="POST" action="/portscan">
+    <form id="portScanForm" method="POST" action="/portscan">
         <label for="targetInput">Enter IP for portscanning:</label>
         <input type="text" name="target" placeholder="Enter IP">
         <button type="submit">PortScan</button><br>
     </form>
-
-    <form method="POST" action="/dns_sec_script">
+    <form id="dnsSecForm" method="POST" action="/dns_sec_script">
         <label for="targetInput">Enter domain for dns SEC validation:</label>
         <input type="text" name="domain" placeholder="ex: google.com">
         <button type="submit">DNS SEC validation</button><br>
     </form>
-
-    <form method="POST" action="/whois_script">
+    
+    <form id="whoisForm" method="POST" action="/whois_script">
         <label for="targetInput">Enter domain for whois lookup:</label>
         <input type="text" name="domain" placeholder="ex: google.com">
         <button type="submit">whois lookup</button><br>
     </form>
-
-    <form method="POST" action="/scapy_script">
+    
+    <form id="networkScanForm" method="POST" action="/scapy_script">
         <label for="targetInput">Enter IP range for network scan:</label>
         <input type="text" name="ipRange" placeholder="ex: 192.168.0.0/24">
         <button type="submit">network scan - SCAPY</button><br>
     </form>
-
-    <form method="POST" action="/arperMITM_script">
+    
+    <form id="arpForm" method="POST" action="/arperMITM_script">
         <label for="targetInput">Man in the Middle:</label>
         <input type="text" name="victim" placeholder="victim IP">
         <input type="text" name="gateway" placeholder="gateway IP">
         <input type="text" name="interface" placeholder="interface ex: eth0">        
         <button type="submit">ARP execute</button><br>
     </form>
-
-    <form method="POST" action="/sniffForCredentials_script">
+    
+    <form id="sniffForm" method="POST" action="/sniffForCredentials_script">
         <label for="targetInput">Enter ports to sniff plaintext credentials on:</label>
         <input type="text" name="port1" placeholder="ex: 80">
         <input type="text" name="port2" placeholder="ex: 443">
         <button type="submit">start sniff</button><br>
     </form>
-
-    <form method="POST" action="/bruteforce_script">
+    
+    <form id="bruteForceForm" method="POST" action="/bruteforce_script">
         <label for="targetInput">Enter url for brute force:</label>
         <input type="text" name="url" placeholder="ex: http://127.0.0.1:5000" value="">
         <input type="text" name="username" placeholder="ex: admin" value="">
@@ -82,6 +138,7 @@
         <input type="text" name="cookie_value" placeholder="optional -> leave empty" value="">
         <button type="submit">start brute force</button><br>
     </form>
+    
 
     {% if results_json %}
     <h1>Results</h1>
@@ -102,6 +159,5 @@
         </tbody>
     </table>
     {% endif %}
-    
 </body>
 </html>

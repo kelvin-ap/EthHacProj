@@ -64,6 +64,14 @@ Not gotten around to implementing the keylogger website of les 9 yet. Tried impl
 
 So far 8h for all, cleaned up some code here and there.
 
+## Christmas holidays 2023
+
+### Scripts
+
+Added a login script just for testing/evidence purpose, this script will set up a simple login page so that the bruteforce script can be tested. Bruteforce script added, be carefull when using this on real websites.
+
+Cleaned up total cluster of project, imports especially. Added descriptions to every script aswell as gave every single script a class structure.
+
 ## Questions answered - report
 
 1. **What is ethical/white-hat hacking?**

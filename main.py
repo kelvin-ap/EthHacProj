@@ -110,14 +110,29 @@ def sniff():
 
 @app.route('/bruteforce_script', methods=['POST'])
 def bruteforce():
-    url = request.form.get('url')
-    print(f"url = {url}")
-    username = request.form.get('username')
-    password_file = request.form.get('passwordfile')
-    login_failed_string = request.form.get('login_failed_string')
-    cookie_value = request.form.get('cookie_value')
+    url = request.form.get('url') or None
+    username = request.form.get('username') or None
+    password_file = request.form.get('passwordfile') or None
+    login_failed_string = request.form.get('login_failed_string') or None
+    cookie_value = request.form.get('cookie_value') or None
 
-    results_json = scripts.Bruteforce(url, username, password_file, login_failed_string, cookie_value).cracking()
+    if not url and not username and not password_file and not login_failed_string and not cookie_value:
+        results_json = scripts.Bruteforce().cracking()
+    else:
+        params = {}
+        if url:
+            params['url'] = url
+        if username:
+            params['username'] = username
+        if password_file:
+            params['password_file'] = password_file
+        if login_failed_string:
+            params['login_failed_string'] = login_failed_string
+        if cookie_value:
+            params['cookie_value'] = cookie_value
+
+        results_json = scripts.Bruteforce(**params).cracking()
+    
     return render_template('index.html', results_json=results_json)
 
 if __name__ == '__main__':
