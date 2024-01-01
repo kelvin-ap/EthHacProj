@@ -72,6 +72,12 @@ Added a login script just for testing/evidence purpose, this script will set up 
 
 Cleaned up total cluster of project, imports especially. Added descriptions to every script aswell as gave every single script a class structure.
 
+Added file output and repaired functionality of scripts. 
+
+### Worked hours
+
+Probably around 25h. Loads of debugging time... bit of a messy code writer.
+
 ## Questions answered - report
 
 1. **What is ethical/white-hat hacking?**
