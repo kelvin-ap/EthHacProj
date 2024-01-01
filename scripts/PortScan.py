@@ -3,6 +3,7 @@ import json
 import nmap
 from rich.table import Table
 from rich import print
+from .output import write_output_to_json_file
 
 class PortScanner:
     """
@@ -26,14 +27,15 @@ class PortScanner:
         - Returns the results dictionary.
     """
 
-    def __init__(self, target):
+    def __init__(self, target, output = True):
         self.target = target
         self.ports = [20, 21, 22, 23, 25, 69, 80, 139, 443, 445, 623, 3306, 3389, 5900, 8080, 27020]
         self.scan_v = nmap.PortScanner()
         self.results = {}
         self.cli_output = ""
+        self.output = output
 
-    def scan_ports(self):        
+    def scan_ports(self):
         try:
             portscan = self.scan_v.scan(self.target)
             host_state = portscan["scan"][list(portscan["scan"])[0]]["status"]["state"]
@@ -55,16 +57,11 @@ class PortScanner:
             regel = f"Host {self.target} is {host_state}"
             self.cli_output += regel
             self.results["host"] = str(host_state)
-
-        print(self.cli_output)
+        
+        if self.output:
+            print(self.cli_output)
+            write_output_to_json_file("PortScan", self.results)
         return self.results
-    
-    def write_output_to_file(self, result_json):
-        current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        file_name = f"./results/portScan_results{current_time}.json"
-        with open(file_name, "w") as file:
-            json.dump(result_json, file, indent=4)
-        print(f"Output written to file: {file_name}")
 
 if __name__ == "__main__":
     targetL = "127.0.0.1"  # Replace with your target IP address

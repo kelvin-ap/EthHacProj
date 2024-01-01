@@ -1,3 +1,5 @@
+from functools import partial
+import nmap
 from scapy.all import srp, Ether, ARP, IP, TCP, sniff, sr1
 from scapy.all import *
 from scapy.layers.inet import IP, ICMP
@@ -8,6 +10,8 @@ import concurrent.futures
 
 from .os_detection import OsDetector
 from .HostDiscoV2 import HostDiscovery
+from .PortScan import PortScanner
+from .output import write_output_to_json_file
 
 class NetworkScanner:
     """
@@ -74,29 +78,31 @@ class NetworkScanner:
         print("Host discovery done")
         return discovered_hosts
 
+    @staticmethod
+    def _scan_ports(host):
+        t = False
+        scanPort = PortScanner(host, t).scan_ports()
+        return host, scanPort
+    
     def service_discovery(self, hosts):
-        open_ports = {}
+        results = {}
 
-        # Specify popular ports for scanning
-        popular_ports = [22, 80, 443, 21, 23, 25, 110, 143, 3306, 8080]
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            # Use partial to create a function with a fixed argument (self)
+            futures = {executor.submit(self._scan_ports, host): host for host in hosts}
+            
+            # Collect the results
+            for future in concurrent.futures.as_completed(futures):
+                host = futures[future]
+                try:
+                    scanPort = future.result()[1]
+                    results[str(host)] = scanPort
+                except Exception as e:
+                    results[str(host)] = f"Error: {e}"
 
-        for host in hosts:
-            ip_address = host['ip']
-            mac_address = host['mac']
-
-            open_ports[ip_address] = []
-
-            for port in popular_ports:
-                # Create a TCP packet to check if the port is open
-                packet = Ether(dst=mac_address)/IP(dst=ip_address)/TCP(dport=port, flags="S")
-                ans = srp1(packet, timeout=1, verbose=0)
-
-                if ans and ans.haslayer(TCP) and ans.getlayer(TCP).flags == 0x12:
-                    open_ports[ip_address].append(port)
-
-        self.results['open_ports'] = open_ports
-        print("Service discovery done")
-        return open_ports
+        self.results['open_ports'] = results
+        print("Port discovery done")
+        return results
 
     @staticmethod
     def _detect_os(host):
@@ -153,21 +159,14 @@ class NetworkScanner:
     def run(self, ip_range):
         full_hosts = self.host_discovery(ip_range)
         hosts = [host.ip for host in full_hosts]
-
-        # self.service_discovery(full_hosts)
+        
+        self.service_discovery(hosts)
         self.remote_os_detection(hosts)
         # self.pcap_analysis(full_hosts)
         print("Run done")
 
-        self.write_output_to_file(self.results)
+        write_output_to_json_file("NetworkScan", self.results)
         return self.results
-    
-    def write_output_to_file(self, result_json):
-        current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        file_name = f"./results/networkScan_results{current_time}.json"
-        with open(file_name, "w") as file:
-            json.dump(result_json, file, indent=4)
-        print(f"Output written to file: {file_name}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Network Scanner')

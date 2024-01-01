@@ -6,6 +6,7 @@ from scapy.all import (ARP, Ether, conf, get_if_hwaddr,
 import sys
 import time
 
+# Credits for this script go to prof. Kristof Michiels's examples
 
 class Arper():
     """
@@ -53,6 +54,7 @@ class Arper():
         # captures network packets
         self.sniff_thread = Process(target=self.sniff)
         self.sniff_thread.start()
+
 
     def poison(self):
         # Construct ARP packets and send them to both victim and gateway to trick
@@ -136,13 +138,6 @@ class Arper():
             return r[Ether].src
         return None
     
-    def write_output_to_file(self, result_json):
-        current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        file_name = f"./results/arper_results{current_time}.json"
-        with open(file_name, "w") as file:
-            json.dump(result_json, file, indent=4)
-        print(f"Output written to file: {file_name}")
-
 
 if __name__ == '__main__':
     (victim, gateway, interface) = (sys.argv[1], sys.argv[2], sys.argv[3])

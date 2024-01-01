@@ -3,8 +3,9 @@ import json
 import whois
 from rich.table import Table
 from rich import print
+from .output import write_output_to_json_file
 
-class WhoIs:
+class WhoIsInfo:
     """
     This class provides methods for retrieving and displaying WHOIS information for a given domain name.
 
@@ -69,20 +70,12 @@ class WhoIs:
                     value = value.strftime("%Y-%m-%d")
                 table.add_row(key, value)
             print(table)
-            self.write_output_to_file(html_display_info)
+            write_output_to_json_file("whois", html_display_info)
             return html_display_info
 
-        except whois.parser.PywhoisError as e:
+        except whois.exceptions.FailedParsingWhoisOutput as e:
             print(f"Error: {e}")
-
-    def write_output_to_file(self, result_json):
-        current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        file_name = f"./results/whois_results{current_time}.json"
-        with open(file_name, "w") as file:
-            json.dump(result_json, file, indent=4)
-        print(f"Output written to file: {file_name}")
 
 if __name__ == "__main__":
     domain_name = input("Enter a domain name to retrieve WHOIS information: ")
-    whois_obj = WhoIs(domain_name)
-    whois_obj.get_domain_info()
+    whois_obj = WhoIsInfo(domain_name).get_domain_info()

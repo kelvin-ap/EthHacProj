@@ -37,7 +37,7 @@ def dns_sec_script():
 @app.route('/whois_script', methods=['POST'])
 def whois_script():
     domain = request.form.get('domain')
-    results_json = scripts.WhoIs(domain).get_domain_info()
+    results_json = scripts.WhoIsInfo(domain).get_domain_info()
     return render_template('index.html', results_json=results_json)
 
 @app.route('/scapy_script', methods=['POST'])
@@ -164,4 +164,4 @@ def ssh_bruteforce():
 
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)

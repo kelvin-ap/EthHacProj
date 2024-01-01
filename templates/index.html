@@ -72,80 +72,91 @@
 
     
     <form id="locationForm" method="POST" action="/run_web_script">
+        <p>This will find location information of a certain domain</p>
         <label for="urlInput">Enter URL for location lookup:</label>
         <input type="text" name="website" placeholder="google.com">
         <button type="submit">Get Location</button><br>
     </form>
     
     <form id="headersForm" method="POST" action="/get_sec_headers">
+        <p>This will display the headers of a domain response</p>
         <label for="urlInput">Enter URL for headers:</label>
         <input type="text" name="headers" placeholder="google.com">
         <button type="submit">Get Headers</button><br>
     </form>
 
     <form id="portScanForm" method="POST" action="/portscan">
+        <p>This will check for popular ports to be open or not on a given Host</p>
         <label for="targetInput">Enter IP for portscanning:</label>
         <input type="text" name="target" placeholder="Enter IP">
         <button type="submit">PortScan</button><br>
     </form>
 
     <form id="dnsSecForm" method="POST" action="/dns_sec_script">
+        <p>Validate if domain has DNSSEC active or not</p>
         <label for="targetInput">Enter domain for dns SEC validation:</label>
         <input type="text" name="domain" placeholder="ex: google.com">
         <button type="submit">DNS SEC validation</button><br>
     </form>
     
     <form id="whoisForm" method="POST" action="/whois_script">
+        <p>Find WHOIS information of a given domain</p>
         <label for="targetInput">Enter domain for whois lookup:</label>
         <input type="text" name="domain" placeholder="ex: google.com">
         <button type="submit">whois lookup</button><br>
     </form>
     
     <form id="networkScanForm" method="POST" action="/scapy_script">
+        <p>Scan a network range for active hosts - Will chech OS & certain ports aswell</p>
+        <p>The bigger the range the longer it will take - /24 advised</p>
         <label for="targetInput">Enter IP range for network scan:</label>
         <input type="text" name="ipRange" placeholder="ex: 192.168.0.0/24">
         <button type="submit">network scan - SCAPY</button><br>
     </form>
     
     <form id="arpForm" method="POST" action="/arperMITM_script">
-        <label for="targetInput">Man in the Middle:</label>
-        <input type="text" name="victim" placeholder="victim IP">
-        <input type="text" name="gateway" placeholder="gateway IP">
+        <p>This will create a MITM attack via ARP poisoning - BE ETHICAL</p>
+        <label for="targetInput">Man in the Middle:</label><br>
+        <input type="text" name="victim" placeholder="victim IP"><br>
+        <input type="text" name="gateway" placeholder="gateway IP"><br>
         <input type="text" name="interface" placeholder="interface ex: eth0">        
         <button type="submit">ARP execute</button><br>
     </form>
     
     <form id="sniffForm" method="POST" action="/sniffForCredentials_script">
-        <label for="targetInput">Enter ports to sniff plaintext credentials on:</label>
-        <input type="text" name="port1" placeholder="ex: 80">
+        <p>TCP traffic sniffer for user and password credentials -- unlikely to be functional in practical situations</p>
+        <label for="targetInput">Enter ports to sniff plaintext credentials on:</label><br>
+        <input type="text" name="port1" placeholder="ex: 80"><br>
         <input type="text" name="port2" placeholder="ex: 443">
         <button type="submit">start sniff</button><br>
     </form>
     
     <form id="bruteForceForm" method="POST" action="/bruteforce_script">
-        <label for="targetInput">Enter url for brute force:</label>
-        <input type="text" name="url" placeholder="empty = http://127.0.0.1:5005" value="">
-        <input type="text" name="username" placeholder="empty = admin" value="">
-        <input type="text" name="passwordfile" placeholder="empty = ./extra/10K_passwords.txt" value="">
-        <input type="text" name="login_failed_string" placeholder="empty = Wrong password! Please try again." value="">
+        <p>Web HTML login bruteforce - BE ETHICAL</p>
+        <label for="targetInput">Enter url for brute force:</label><br>
+        <input type="text" name="url" placeholder="empty = http://127.0.0.1:5005" value=""><br>
+        <input type="text" name="username" placeholder="empty = admin" value=""><br>
+        <input type="text" name="passwordfile" placeholder="empty = ./extra/10K_passwords.txt" value=""><br>
+        <input type="text" name="login_failed_string" placeholder="empty = Wrong password! Please try again." value=""><br>
         <input type="text" name="cookie_value" placeholder="optional -> leave empty" value="">
         <button type="submit">start brute force</button><br>
     </form>
     
     <form id="ssh_bruteForce_Form" method="POST" action="/ssh_bruteforce_script">
+        <p>SSH bruteforcer - BE ETHICAL</p>
         <p>This execution will cause a lot of cluttering in CLI - still works though</p>
-        <label for="targetInput">Enter host ip for ssh brute force:</label>
-        <input type="text" name="host" placeholder="empty = http://192.168.146.65" value="">
-        <input type="text" name="username" placeholder="empty = root" value="">
-        <input type="number" name="threads" placeholder="empty = 5" value="">
-        <input type="number" name="port" placeholder="empty = 22" value="">
+        <label for="targetInput">Enter host ip for ssh brute force:</label><br>
+        <input type="text" name="host" placeholder="empty = http://192.168.146.65" value=""><br>
+        <input type="text" name="username" placeholder="empty = root" value=""><br>
+        <input type="number" name="threads" placeholder="empty = 5" value=""><br>
+        <input type="number" name="port" placeholder="empty = 22" value=""><br>
         <input type="text" name="passwordfile" placeholder="empty = ./extra/10K_passwords.txt" value="">
         <button type="submit">start SSH brute force</button><br>
     </form>
     
 
     {% if results_json %}
-    <h1>Results</h1>
+    <h1>Results also writen to file in /results/</h1>
     <table>
         <thead>                
             <tr>

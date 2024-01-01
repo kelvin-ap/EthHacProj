@@ -3,6 +3,7 @@ import json
 from pwn import *
 import paramiko
 import threading
+from .output import write_output_to_json_file
 
 class SSHBruteForce:
     """
@@ -104,7 +105,6 @@ class SSHBruteForce:
         for thread in threads:
             thread.join()
 
-        self.write_output_to_file()
         self.result_json = {
             "host": self.host,
             "username": self.username,
@@ -112,14 +112,8 @@ class SSHBruteForce:
             "attempts": self.attempts,
             "host_ssh_status": self.host_ssh_status
         }
+        write_output_to_json_file("SSH-Brute", self.result_json)
         return self.result_json
-
-    def write_output_to_file(self):
-        current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        file_name = f"./results/sshBruteforce_results{current_time}.json"
-        with open(file_name, "w") as file:
-            json.dump(self.result_json, file, indent=4)
-        print(f"Output written to file: {file_name}")
 
 if __name__ == "__main__":
     SSHBruteForce().run()
